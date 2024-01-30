@@ -33,7 +33,7 @@ export async function createDirIfNotExists(dir) {
  */
 export async function readFilesFromDir(dir) {
   let files = [];
-  // console.log('dir', dir);
+  console.log('dir', dir);
   try {
     files = await readdir(dir);
   } catch (e) {
@@ -43,35 +43,35 @@ export async function readFilesFromDir(dir) {
 
   const mapped = files.map(async (file) => {
     const path = join(dir, file);
-    // console.log('mapping', file, path);
+    console.log('mapping', file, path);
     const info = await stat(path);
-    // console.log('info', info);
+    console.log('info', info);
 
     if (info.isDirectory()) {
-      // console.log('is dir!');
+      console.log('is dir!');
       return null;
     }
 
     if (info.isFile()) {
-      // console.log('is file!');
+      console.log('is file!');
       return path;
     }
 
     return null;
   });
 
-  // console.log('resolving promises...');
+  console.log('resolving promises...');
   const resolved = await Promise.all(mapped);
-  // console.log('resolved!', resolved);
+  console.log('resolved!', resolved);
 
-  // Remove any directories that will be represented by `null`
+  //  Remove any directories that will be represented by `null`
   const filtered = [];
   for (const file of resolved) {
     if (file) {
       filtered.push(file);
     }
   }
-  // console.log('filtered', filtered);
+  console.log('filtered', filtered);
 
   return filtered;
 }
