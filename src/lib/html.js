@@ -1,7 +1,9 @@
-function template(title, body) {
+export function template(title, body) {
   const html = /* html */ `
   <html>
     <head>
+      <meta charset="utf-8" />
+      <link rel="stylesheet" href="styles.css">
       <title>${title}</title>
     </head>
     <body>

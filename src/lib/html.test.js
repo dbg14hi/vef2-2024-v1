@@ -1,11 +1,12 @@
 import { describe, expect, it } from '@jest/globals';
-import { indexTemplate } from './html';
+import { template } from './html.js';
 
 describe('html', () => {
-  describe('indexTemplate', () => {
-    it.skip('should have a test', () => {
-      // TODO laga þetta test
-      expect(indexTemplate().length).toBeGreaterThan(1);
+  describe('template', () => {
+    it('should return template with given title and body', () => {
+      const result = template('title', 'body');
+
+      expect(result).toContain('<title>title</title>');
     });
   });
 });

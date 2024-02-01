@@ -59,6 +59,7 @@ async function main() {
   }
 
   const standings = calculateStandings(allGames);
+  console.log(calculateStandings(allGames));
 
   // Búum til HTML skrár
 
