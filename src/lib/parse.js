@@ -2,6 +2,36 @@ export function parseTeamsJson(data) {
   return JSON.parse(data);
 }
 
+export function parseGamedayFile(fileContent, teams) {
+  try {
+    const parsedData = JSON.parse(fileContent);
+
+    // Map team IDs to team names for easy lookup
+    const teamIdToName = new Map(teams.map(team => [team.id, team.name]));
+
+    const parsedGameday = {
+      date: new Date(parsedData.date),
+      games: parsedData.games.map(game => ({
+          home: {
+            name: teamIdToName.get(game.home.name),
+            score: game.home.score,
+          },
+          away: {
+            name: teamIdToName.get(game.away.name),
+            score: game.away.score,
+          },
+        })),
+    };
+
+    return parsedGameday;
+  } catch (error) {
+    console.error('Error parsing game day file:', error.message);
+    throw error;
+  }
+}
+
+
+
 /**
  * Tekur `gameday` gögn, staðfestir og hendir ólöglegum
  * færslum, skilar á normalizeseruðu formi.
