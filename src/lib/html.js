@@ -29,16 +29,28 @@ export function indexTemplate() {
 }
 
 export function stadaTemplate(standings) {
+  // Log the type and content of standings
+  console.log('Standings type:', typeof standings);
+  console.log('Standings content:', standings);
+
+  // Check if standings is an array before using map
+  if (!Array.isArray(standings)) {
+    console.error('Standings is not an array.');
+    return ''; // Return an empty string or handle the error appropriately
+  }
+
   const title = 'Boltadeildin—staðan!';
-  const standingsHtml = standings.toString();
+  const standingsHtml = standings.map((team, index) => `<p>${index + 1}. ${team.name} - ${team.points} points</p>`).join('');
   const body = /* html */ `
-  <section>
-    <h1>Staðan í deildinni!</h1>
-    ${standingsHtml}
-  </section>`;
+    <section>
+      <h1>Staðan í deildinni!</h1>
+      ${standingsHtml}
+    </section>`;
 
   return template(title, body);
 }
+
+
 
 export function leikirTemplate(games) {
   const title = 'Boltadeildin—leikir!';

@@ -25,7 +25,6 @@ async function main() {
   console.info('team names read, total', teams.length);
 
 
-
   // Finnum allar skrár sem byrja á 'gameday-' í 'INPUT_DIR'
   const files = await readFilesFromDir(INPUT_DIR);
   const gamedayFiles = files.filter((file) => file.indexOf('gameday-') > 0);
@@ -39,30 +38,51 @@ async function main() {
 
     try {
       // Reyna að þátta skrána og síðan bæta í fylkið ef það tekst
-      // @ts-ignore
       gamedays.push(parseGamedayFile(file, teams));
     } catch (e) {
-      console.error(`unable to pasre ${gamedayFile}`, e.message);
+      console.error(`unable to parse ${gamedayFile}`, e.message);
     }
   }
-
   console.info('gameday files parsed', gamedays.length)
-
 
   // Sort þ.a. elsi leikdagur sé fyrst
   gamedays.sort((a, b) => a.date.getTime() - b.date.getTime())
 
-  // Reikna stöðu frá öll leikjum
-  const allGames = [];
-  for (const gameday of gamedays) {
-    allGames.push(...gameday.games)
-  }
 
-  const standings = calculateStandings(allGames);
-  console.log(calculateStandings(allGames));
+
+  // Reikna stöðu frá öllum leikjum
+  // Reikna stöðu frá öllum leikjum
+const allGames = [];
+
+for (const gameday of gamedays) {
+  const parsedGames = gameday.games.map(game => {
+    const homeTeamName = typeof game.home.name === 'string' ? game.home.name : null;
+    const awayTeamName = typeof game.away.name === 'string' ? game.away.name : null;
+
+    return {
+      home: {
+        name: homeTeamName,
+        score: typeof game.home.score === 'number' ? game.home.score : null,
+      },
+      away: {
+        name: awayTeamName,
+        score: typeof game.away.score === 'number' ? game.away.score : null,
+      },
+    };
+  });
+
+  allGames.push(...parsedGames);
+}
+
+console.log('All Games:', allGames);
+
+
+  const standings = calculateStandings(allGames, teams);
+  console.log('Standings:', standings);
+
+
 
   // Búum til HTML skrár
-
   const indexHtml = indexTemplate();
   const indexFilename = join(OUTPUT_DIR, 'index.html');
   await writeFile(indexFilename, indexHtml);
